@@ -1,0 +1,13 @@
+{
+  "name":"KS Nexus",
+  "short_name":"KS Nexus",
+  "description":"KS Nexus — Development × Design",
+  "start_url":"/",
+  "display":"standalone",
+  "background_color":"#08090d",
+  "theme_color":"#08090d",
+  "orientation":"portrait-primary",
+  "icons":[
+    {"src":"/ks-nexus-icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
+  ]
+}

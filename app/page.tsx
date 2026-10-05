@@ -38,7 +38,7 @@ export default function Home() {
         <h1>Ideas into <span>digital products.</span></h1>
         <p className="hero-copy">Development, design and visual identity — forged together into focused digital products.</p>
         <div className="hero-actions">
-          <button className="primary" onClick={openConfirmation}>Start a project <b>↗</b></button>
+          <button className="primary" onClick={() => setConfirmOpen(true)}>Start a project <b>↗</b></button>
           <button className="ghost" onClick={() => scrollTo("work", "Work")}>Explore work</button>
         </div>
       </section>

@@ -1,4 +1,4 @@
-const CACHE_NAME = "ks-digital-v3";
+const CACHE_NAME = "ks-digital-v4";
 const APP_SHELL = ["/", "/manifest.webmanifest", "/ks-nexus-icon.svg"];
 
 self.addEventListener("install", (event) => {

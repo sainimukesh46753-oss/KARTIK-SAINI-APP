@@ -9,6 +9,6 @@
   "theme_color":"#08090d",
   "orientation":"portrait-primary",
   "icons":[
-    {"src":"/ks-nexus-icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
+    {"src":"/ks-digital-icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
   ]
 }

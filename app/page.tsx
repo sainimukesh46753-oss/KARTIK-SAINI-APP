@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ConfirmationFlow from "./confirmation-flow";
 
 const services = [
@@ -18,8 +18,11 @@ const work = [
 
 export default function Home() {
   const [tab, setTab] = useState("Home");
-  const [confirmOpen, setConfirmOpen] = useState(false);
-  const closeConfirmation = () => setConfirmOpen(false);
+  const [confirmed, setConfirmed] = useState(false);
+
+  useEffect(() => {
+    setConfirmed(window.localStorage.getItem("ks-digital-onboarding-complete") === "true");
+  }, []);
 
   const scrollTo = (id: string, nextTab: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
@@ -38,7 +41,7 @@ export default function Home() {
         <h1>Ideas into <span>digital products.</span></h1>
         <p className="hero-copy">Development, design and visual identity — forged together into focused digital products.</p>
         <div className="hero-actions">
-          <button className="primary" onClick={() => setConfirmOpen(true)}>Start a project <b>↗</b></button>
+          <button className="primary" onClick={() => scrollTo("contact", "Contact")}>Start a project <b>↗</b></button>
           <button className="ghost" onClick={() => scrollTo("work", "Work")}>Explore work</button>
         </div>
       </section>
@@ -74,7 +77,7 @@ export default function Home() {
           <button className={tab === label ? "active" : ""} key={label} onClick={() => scrollTo(id, label)}><span>{icon}</span>{label}</button>
         )}
       </nav>
-      {confirmOpen && <ConfirmationFlow onClose={closeConfirmation} />}
+      {!confirmed && <ConfirmationFlow onComplete={() => setConfirmed(true)} />}
     </main>
   );
 }

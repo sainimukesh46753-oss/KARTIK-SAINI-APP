@@ -100,6 +100,7 @@ export default function Home() {
           <button className={tab === label ? "active" : ""} key={label} onClick={() => scrollTo(id, label)}><span>{icon}</span>{label}</button>
         )}
       </nav>
+      {confirmOpen && <ConfirmationFlow onClose={closeConfirmation} />}
     </main>
   );
 }

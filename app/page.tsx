@@ -26,14 +26,14 @@ export default function Home() {
   return (
     <main className="app">
       <header className="topbar">
-        <div className="brand"><span className="brand-mark">K</span><span>KARTIK</span></div>
+        <div className="brand"><span className="brand-mark">K</span><span>KS FORGE</span></div>
         <span className="status"><i /> Available for projects</span>
       </header>
 
       <section className="hero" id="home">
-        <p className="eyebrow">INDEPENDENT CREATIVE DEVELOPER</p>
+        <p className="eyebrow">DEVELOPMENT × DESIGN</p>
         <h1>Ideas into <span>digital products.</span></h1>
-        <p className="hero-copy">Design, development and visual identity — brought together in one focused studio.</p>
+        <p className="hero-copy">Development, design and visual identity — forged together into focused digital products.</p>
         <div className="hero-actions">
           <button className="primary" onClick={() => scrollTo("contact", "Contact")}>Start a project <b>↗</b></button>
           <button className="ghost" onClick={() => scrollTo("work", "Work")}>Explore work</button>

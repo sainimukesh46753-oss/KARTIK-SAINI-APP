@@ -1,5 +1,5 @@
-const CACHE_NAME = "ks-digital-v4";
-const APP_SHELL = ["/", "/manifest.webmanifest", "/ks-nexus-icon.svg"];
+const CACHE_NAME = "ks-digital-v5";
+const APP_SHELL = ["/", "/manifest.webmanifest", "/ks-digital-icon.svg"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL)));

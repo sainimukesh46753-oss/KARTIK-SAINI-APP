@@ -1,12 +1,12 @@
 # KARTIK-SAINI-APP
 
-A standalone, mobile-first app project for KS Forge.
+A standalone, mobile-first app project for KS Digital.
 
 This repository is intentionally separate from the existing portfolio website.
 
 ## Brand
 
-**KS Forge**  
+**KS Digital**  
 **Development × Design**  
 Where ideas are forged into digital products.
 

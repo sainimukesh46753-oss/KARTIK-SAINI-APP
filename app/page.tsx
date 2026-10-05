@@ -26,7 +26,7 @@ export default function Home() {
   return (
     <main className="app">
       <header className="topbar">
-        <div className="brand"><span className="brand-mark">K</span><span>KS FORGE</span></div>
+        <div className="brand"><span className="brand-mark">K</span><span>KS DIGITAL</span></div>
         <span className="status"><i /> Available for projects</span>
       </header>
 

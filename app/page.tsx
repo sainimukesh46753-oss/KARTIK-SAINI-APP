@@ -26,7 +26,7 @@ export default function Home() {
   return (
     <main className="app">
       <header className="topbar">
-        <div className="brand"><span className="brand-mark">K</span><span>KS DIGITAL</span></div>
+        <div className="brand"><img className="brand-logo" src="/ks-digital-logo.svg" alt="KS Digital" /></div>
         <span className="status"><i /> Available for projects</span>
       </header>
 

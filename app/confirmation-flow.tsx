@@ -2,8 +2,54 @@
 
 import { useMemo, useState } from "react";
 
-const countries = ["India","United States","United Kingdom","United Arab Emirates","Australia","Canada"];
-const languages = ["English","Hindi","Hinglish"];
+const countryLanguages: Record<string, string[]> = {
+  "Afghanistan":["Dari","Pashto"],"Albania":["Albanian"],"Algeria":["Arabic","Tamazight"],"Andorra":["Catalan"],"Angola":["Portuguese"],
+  "Antigua and Barbuda":["English"],"Argentina":["Spanish"],"Armenia":["Armenian"],"Australia":["English"],"Austria":["German"],
+  "Azerbaijan":["Azerbaijani"],"Bahamas":["English"],"Bahrain":["Arabic"],"Bangladesh":["Bengali"],"Barbados":["English"],
+  "Belarus":["Belarusian","Russian"],"Belgium":["Dutch","French","German"],"Belize":["English","Spanish"],"Benin":["French"],
+  "Bhutan":["Dzongkha"],"Bolivia":["Spanish","Quechua","Aymara"],"Bosnia and Herzegovina":["Bosnian","Croatian","Serbian"],
+  "Botswana":["English","Tswana"],"Brazil":["Portuguese"],"Brunei":["Malay"],"Bulgaria":["Bulgarian"],"Burkina Faso":["French"],
+  "Burundi":["Kirundi","French","English"],"Cabo Verde":["Portuguese"],"Cambodia":["Khmer"],"Cameroon":["English","French"],
+  "Canada":["English","French"],"Central African Republic":["French","Sango"],"Chad":["French","Arabic"],"Chile":["Spanish"],
+  "China":["Mandarin Chinese"],"Colombia":["Spanish"],"Comoros":["Comorian","Arabic","French"],"Congo, Democratic Republic":["French"],
+  "Congo, Republic":["French"],"Costa Rica":["Spanish"],"Côte d'Ivoire":["French"],"Croatia":["Croatian"],"Cuba":["Spanish"],
+  "Cyprus":["Greek","Turkish"],"Czechia":["Czech"],"Denmark":["Danish"],"Djibouti":["French","Arabic"],"Dominica":["English"],
+  "Dominican Republic":["Spanish"],"Ecuador":["Spanish"],"Egypt":["Arabic"],"El Salvador":["Spanish"],"Equatorial Guinea":["Spanish","French","Portuguese"],
+  "Eritrea":["Tigrinya","Arabic","English"],"Estonia":["Estonian"],"Eswatini":["Swazi","English"],"Ethiopia":["Amharic","English"],
+  "Fiji":["English","Fijian","Fiji Hindi"],"Finland":["Finnish","Swedish"],"France":["French"],"Gabon":["French"],
+  "Gambia":["English"],"Georgia":["Georgian"],"Germany":["German"],"Ghana":["English"],"Greece":["Greek"],"Grenada":["English"],
+  "Guatemala":["Spanish"],"Guinea":["French"],"Guinea-Bissau":["Portuguese"],"Guyana":["English"],"Haiti":["Haitian Creole","French"],
+  "Honduras":["Spanish"],"Hungary":["Hungarian"],"Iceland":["Icelandic"],"India":["Hindi","English","Bengali","Telugu","Marathi","Tamil","Gujarati","Kannada","Malayalam","Punjabi","Urdu"],
+  "Indonesia":["Indonesian"],"Iran":["Persian"],"Iraq":["Arabic","Kurdish"],"Ireland":["Irish","English"],"Israel":["Hebrew","Arabic"],
+  "Italy":["Italian"],"Jamaica":["English"],"Japan":["Japanese"],"Jordan":["Arabic"],"Kazakhstan":["Kazakh","Russian"],
+  "Kenya":["English","Swahili"],"Kiribati":["English","Gilbertese"],"Kuwait":["Arabic"],"Kyrgyzstan":["Kyrgyz","Russian"],
+  "Laos":["Lao"],"Latvia":["Latvian"],"Lebanon":["Arabic"],"Lesotho":["Sesotho","English"],"Liberia":["English"],
+  "Libya":["Arabic"],"Liechtenstein":["German"],"Lithuania":["Lithuanian"],"Luxembourg":["Luxembourgish","French","German"],
+  "Madagascar":["Malagasy","French"],"Malawi":["English","Chichewa"],"Malaysia":["Malay"],"Maldives":["Dhivehi"],"Mali":["French"],
+  "Malta":["Maltese","English"],"Marshall Islands":["Marshallese","English"],"Mauritania":["Arabic"],"Mauritius":["English","French","Mauritian Creole"],
+  "Mexico":["Spanish"],"Micronesia":["English"],"Moldova":["Romanian"],"Monaco":["French"],"Mongolia":["Mongolian"],
+  "Montenegro":["Montenegrin"],"Morocco":["Arabic","Amazigh"],"Mozambique":["Portuguese"],"Myanmar":["Burmese"],"Namibia":["English"],
+  "Nauru":["Nauruan","English"],"Nepal":["Nepali"],"Netherlands":["Dutch"],"New Zealand":["English","Māori","New Zealand Sign Language"],
+  "Nicaragua":["Spanish"],"Niger":["French"],"Nigeria":["English"],"North Korea":["Korean"],"North Macedonia":["Macedonian","Albanian"],
+  "Norway":["Norwegian"],"Oman":["Arabic"],"Pakistan":["Urdu","English","Punjabi","Sindhi","Pashto","Balochi"],"Palau":["Palauan","English"],
+  "Palestine":["Arabic"],"Panama":["Spanish"],"Papua New Guinea":["English","Tok Pisin","Hiri Motu"],"Paraguay":["Spanish","Guaraní"],
+  "Peru":["Spanish","Quechua","Aymara"],"Philippines":["Filipino","English"],"Poland":["Polish"],"Portugal":["Portuguese"],
+  "Qatar":["Arabic"],"Romania":["Romanian"],"Russia":["Russian"],"Rwanda":["Kinyarwanda","English","French"],"Saint Kitts and Nevis":["English"],
+  "Saint Lucia":["English"],"Saint Vincent and the Grenadines":["English"],"Samoa":["Samoan","English"],"San Marino":["Italian"],
+  "São Tomé and Príncipe":["Portuguese"],"Saudi Arabia":["Arabic"],"Senegal":["French","Wolof"],"Serbia":["Serbian"],
+  "Seychelles":["Seychellois Creole","English","French"],"Sierra Leone":["English"],"Singapore":["English","Malay","Mandarin Chinese","Tamil"],
+  "Slovakia":["Slovak"],"Slovenia":["Slovenian"],"Solomon Islands":["English"],"Somalia":["Somali","Arabic"],"South Africa":["English","Zulu","Xhosa","Afrikaans","Sesotho","Setswana"],
+  "South Korea":["Korean"],"South Sudan":["English"],"Spain":["Spanish"],"Sri Lanka":["Sinhala","Tamil"],"Sudan":["Arabic","English"],
+  "Suriname":["Dutch"],"Sweden":["Swedish"],"Switzerland":["German","French","Italian","Romansh"],"Syria":["Arabic"],
+  "Tajikistan":["Tajik"],"Tanzania":["Swahili","English"],"Thailand":["Thai"],"Timor-Leste":["Tetum","Portuguese"],"Togo":["French"],
+  "Tonga":["Tongan","English"],"Trinidad and Tobago":["English"],"Tunisia":["Arabic"],"Türkiye":["Turkish"],"Turkmenistan":["Turkmen"],
+  "Tuvalu":["Tuvaluan","English"],"Uganda":["English","Swahili"],"Ukraine":["Ukrainian"],"United Arab Emirates":["Arabic","English"],
+  "United Kingdom":["English","Welsh","Scottish Gaelic"],"United States":["English","Spanish"],"Uruguay":["Spanish"],"Uzbekistan":["Uzbek"],
+  "Vanuatu":["Bislama","English","French"],"Vatican City":["Italian","Latin"],"Venezuela":["Spanish"],"Vietnam":["Vietnamese"],
+  "Yemen":["Arabic"],"Zambia":["English"],"Zimbabwe":["English","Shona","Ndebele"]
+};
+const countries = Object.keys(countryLanguages).sort((a,b)=>a.localeCompare(b));
+
 
 export default function ConfirmationFlow({ onComplete }: { onComplete: () => void }) {
   const [step, setStep] = useState(1);
@@ -46,7 +92,7 @@ export default function ConfirmationFlow({ onComplete }: { onComplete: () => voi
 
         {step === 1 && <div className="confirm-step"><p className="step-kicker">STEP 1 OF 5</p><h3>Select your country</h3><label>Country<select value={country} onChange={e=>setCountry(e.target.value)}><option value="">Select country</option>{countries.map(x=><option key={x}>{x}</option>)}</select></label></div>}
 
-        {step === 2 && <div className="confirm-step"><p className="step-kicker">STEP 2 OF 5</p><h3>Select your language</h3><label>Language<select value={language} onChange={e=>setLanguage(e.target.value)}><option value="">Select language</option>{languages.map(x=><option key={x}>{x}</option>)}</select></label></div>}
+        {step === 2 && <div className="confirm-step"><p className="step-kicker">STEP 2 OF 5</p><h3>Select your language</h3><label>Language<select value={language} onChange={e=>setLanguage(e.target.value)} disabled={!country}><option value="">{country ? "Select language" : "Select country first"}</option>{(countryLanguages[country] || []).map(x=><option key={x}>{x}</option>)}</select></label></div>}
 
         {step === 3 && <div className="confirm-step"><p className="step-kicker">STEP 3 OF 5</p><h3>Tell us about you</h3><label>Full name<input type="text" autoComplete="name" placeholder="Your name" value={name} onChange={e=>setName(e.target.value)}/></label><label>Age <span className="age-hint">18+ only</span><input type="number" min="18" max="120" inputMode="numeric" placeholder="18" value={age} onChange={e=>setAge(e.target.value)}/></label><label>Mobile number<input inputMode="tel" autoComplete="tel" placeholder="+91 98765 43210" value={mobile} onChange={e=>setMobile(e.target.value)}/></label><label>Email<input type="email" autoComplete="email" placeholder="you@example.com" value={email} onChange={e=>setEmail(e.target.value)}/></label>{age && !validAge && <p className="confirm-error">KS Digital is available only to users aged 18 or above.</p>}</div>}
 

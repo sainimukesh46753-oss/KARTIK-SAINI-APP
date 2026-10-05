@@ -7,9 +7,9 @@ export const metadata: Metadata = {
   description: "KS Digital — a premium desktop-installable experience for development, design and digital products.",
   manifest: "/manifest.webmanifest",
   icons: {
-    icon: "/ks-nexus-icon.svg",
-    shortcut: "/ks-nexus-icon.svg",
-    apple: "/ks-nexus-icon.svg",
+    icon: "/ks-digital-icon.svg",
+    shortcut: "/ks-digital-icon.svg",
+    apple: "/ks-digital-icon.svg",
   },
   themeColor: "#08090d",
 };

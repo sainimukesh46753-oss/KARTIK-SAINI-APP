@@ -3,8 +3,8 @@ import ServiceWorkerRegister from "./sw-register";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "KS Forge — Development × Design",
-  description: "KS Forge — a premium desktop-installable experience for development, design and digital products.",
+  title: "KS Digital — Development × Design",
+  description: "KS Digital — a premium desktop-installable experience for development, design and digital products.",
   manifest: "/manifest.webmanifest",
   icons: {
     icon: "/ks-nexus-icon.svg",

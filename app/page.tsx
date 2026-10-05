@@ -3,80 +3,80 @@
 import { useEffect, useState } from "react";
 import ConfirmationFlow from "./confirmation-flow";
 
-const services = [
-  { n: "01", title: "Web Development", text: "Fast, polished digital experiences built for real use." },
-  { n: "02", title: "Full-Stack Apps", text: "Products with thoughtful flows, data and scalable foundations." },
-  { n: "03", title: "UI / UX Design", text: "Interfaces that feel clear, premium and intentional." },
-  { n: "04", title: "Brand & Graphic Design", text: "Visual systems, logos and campaign creatives that stick." },
+const stats = [
+  ["01", "Projects", "12"],
+  ["02", "Services", "08"],
+  ["03", "Messages", "03"],
 ];
 
-const work = [
-  { tag: "PRODUCT", title: "FindF", desc: "A concept product experience focused on discovery and conversion." },
-  { tag: "E-COMMERCE", title: "KASA", desc: "A modern commerce interface designed around browsing and trust." },
-  { tag: "BRANDING", title: "Brand Systems", desc: "Identity direction, logo systems and supporting visual language." },
+const quick = [
+  ["Start a project", "Tell us what you want to build.", "↗"],
+  ["Explore services", "Development, design & branding.", "→"],
+  ["View portfolio", "See selected work and case studies.", "→"],
 ];
 
 export default function Home() {
-  const [tab, setTab] = useState("Home");
   const [confirmed, setConfirmed] = useState(false);
+  const [tab, setTab] = useState("Dashboard");
 
   useEffect(() => {
     setConfirmed(window.localStorage.getItem("ks-digital-onboarding-complete") === "true");
   }, []);
 
-  const scrollTo = (id: string, nextTab: string) => {
+  const go = (label: string) => {
+    setTab(label);
+    const id = label.toLowerCase().replace(" ", "-");
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-    setTab(nextTab);
   };
 
   return (
     <main className="app">
-      <header className="topbar">
+      <header className="app-header">
         <div className="brand"><img className="brand-logo" src="/ks-digital-logo.svg" alt="KS Digital" /></div>
-        <span className="status"><i /> Available for projects</span>
+        <div className="header-right"><span className="live"><i /> Online</span><button className="profile-btn" onClick={() => setTab("Profile")}>KS</button></div>
       </header>
 
-      <section className="hero" id="home">
-        <p className="eyebrow">DEVELOPMENT × DESIGN</p>
-        <h1>Ideas into <span>digital products.</span></h1>
-        <p className="hero-copy">Development, design and visual identity — forged together into focused digital products.</p>
-        <div className="hero-actions">
-          <button className="primary" onClick={() => scrollTo("contact", "Contact")}>Start a project <b>↗</b></button>
-          <button className="ghost" onClick={() => scrollTo("work", "Work")}>Explore work</button>
-        </div>
-      </section>
-
-      <section className="featured" id="work">
-        <div className="section-head"><div><p className="eyebrow">SELECTED WORK</p><h2>Built with intent.</h2></div><span className="count">03 PROJECTS</span></div>
-        <div className="work-grid">
-          {work.map((item, i) => (
-            <article className="work-card" key={item.title}>
-              <div className={"work-art art-" + (i + 1)}><span>{item.tag}</span><strong>{item.title}</strong><em>↗</em></div>
-              <div className="card-copy"><h3>{item.title}</h3><p>{item.desc}</p></div>
-            </article>
+      <div className="dashboard-shell">
+        <aside className="sidebar">
+          <p className="side-label">WORKSPACE</p>
+          {["Dashboard", "Projects", "Services", "Messages", "Profile"].map((item) => (
+            <button key={item} className={tab === item ? "side-link active" : "side-link"} onClick={() => setTab(item)}>
+              <span>{item === "Dashboard" ? "⌂" : item === "Projects" ? "▣" : item === "Services" ? "✦" : item === "Messages" ? "◌" : "○"}</span>{item}
+            </button>
           ))}
-        </div>
-      </section>
+          <div className="sidebar-bottom"><p className="side-label">SYSTEM</p><button className="side-link" onClick={() => setTab("Settings")}><span>⚙</span>Settings</button></div>
+        </aside>
 
-      <section className="services" id="services">
-        <div className="section-head"><div><p className="eyebrow">WHAT I DO</p><h2>Small team energy.<br />Full product thinking.</h2></div></div>
-        <div className="service-list">
-          {services.map((s) => <article className="service" key={s.n}><span>{s.n}</span><div><h3>{s.title}</h3><p>{s.text}</p></div><b>↗</b></article>)}
-        </div>
-      </section>
+        <section className="dashboard" id="dashboard">
+          <div className="dash-top">
+            <div><p className="eyebrow">KS DIGITAL / DASHBOARD</p><h1>Build something <span>great.</span></h1><p className="dash-sub">Your workspace for digital products, design and creative projects.</p></div>
+            <button className="primary" onClick={() => setTab("New Project")}>New project <b>↗</b></button>
+          </div>
 
-      <section className="contact" id="contact">
-        <p className="eyebrow">HAVE A PROJECT?</p>
-        <h2>Let&apos;s make something<br /><span>worth remembering.</span></h2>
-        <p>Tell me what you&apos;re building, what&apos;s stuck, or simply where you want to go.</p>
-        <button className="primary" onClick={() => window.location.href = "mailto:sainimukesh46753@gmail.com"}>Send an enquiry <b>↗</b></button>
-      </section>
+          <div className="stats">
+            {stats.map(([n, label, value]) => <div className="stat" key={label}><span>{n}</span><div><strong>{value}</strong><small>{label}</small></div></div>)}
+          </div>
 
-      <nav className="bottom-nav" aria-label="App navigation">
-        {[["Home","home","⌂"],["Work","work","◫"],["Services","services","✦"],["Contact","contact","↗"]].map(([label,id,icon]) =>
-          <button className={tab === label ? "active" : ""} key={label} onClick={() => scrollTo(id, label)}><span>{icon}</span>{label}</button>
-        )}
-      </nav>
+          <div className="section-title"><div><p className="eyebrow">QUICK ACTIONS</p><h2>What do you want to do?</h2></div></div>
+          <div className="quick-grid">
+            {quick.map(([title, text, icon]) => <button className="quick-card" key={title} onClick={() => setTab(title)}><span>{icon}</span><div><h3>{title}</h3><p>{text}</p></div><b>↗</b></button>)}
+          </div>
+
+          <div className="section-title recent-title"><div><p className="eyebrow">RECENT WORK</p><h2>Projects in focus.</h2></div><button className="text-btn" onClick={() => setTab("Projects")}>View all →</button></div>
+          <div className="project-grid">
+            <article className="project-card"><div className="project-art art-purple"><span>01 / PRODUCT</span><strong>FindF</strong><em>Discovery platform</em></div><div className="project-meta"><b>FindF</b><span>Product Design + Development</span></div></article>
+            <article className="project-card"><div className="project-art art-dark"><span>02 / E-COMMERCE</span><strong>KASA</strong><em>Commerce experience</em></div><div className="project-meta"><b>KASA</b><span>UI / UX + Full-Stack</span></div></article>
+            <article className="project-card"><div className="project-art art-blue"><span>03 / BRANDING</span><strong>KS</strong><em>Identity system</em></div><div className="project-meta"><b>Brand Systems</b><span>Strategy + Visual Identity</span></div></article>
+          </div>
+
+          <section className="workspace-banner" id="projects">
+            <div><p className="eyebrow">YOUR WORKSPACE</p><h2>One place for every <span>digital idea.</span></h2><p>Projects, files, conversations and services will live here as we build the next version of KS Digital.</p></div>
+            <button className="ghost" onClick={() => setTab("Projects")}>Open projects</button>
+          </section>
+        </section>
+      </div>
+
+      <nav className="mobile-nav">{["Dashboard","Projects","Services","Messages","Profile"].map(x => <button className={tab===x?"active":""} key={x} onClick={() => setTab(x)}>{x}</button>)}</nav>
       {!confirmed && <ConfirmationFlow onComplete={() => setConfirmed(true)} />}
     </main>
   );

@@ -206,7 +206,7 @@ function Content({tab,setTab}:{tab:string;setTab:(v:string)=>void}) {
 export default function Home() {
   const [tab,setTab]=useState("Dashboard");
   const [ready,setReady]=useState(false);
-  useEffect(()=>setReady(localStorage.getItem("ks-digital-onboarding-complete")==="true"),[]);
+  useEffect(()=>{setReady(localStorage.getItem("ks-digital-onboarding-complete")==="true"); if("serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js").catch(()=>{});},[]);
   if(!ready) return <ConfirmationFlow onComplete={()=>setReady(true)}/>;
   return <main className="app"><header className="app-header"><div className="brand"><div className="brand-mark">KS</div></div><div className="header-right"><span className="live">● Online</span><button className="profile-btn" onClick={()=>setTab("Profile")}>KS</button></div></header><div className="dashboard-shell"><aside className="sidebar"><p className="side-label">WORKSPACE</p>{nav.map((item,i)=><button className={tab===item?"side-link active":"side-link"} key={item} onClick={()=>setTab(item)}><span>{["⌂","▣","✦","✉","□","₹","◷","●","◒","?","◎","⚙"][i]}</span>{item}</button>)}</aside><Content tab={tab} setTab={setTab}/></div><nav className="mobile-nav">{nav.slice(0,5).map((item)=><button className={tab===item?"active":""} key={item} onClick={()=>setTab(item)}>{item}</button>)}</nav></main>;
 }

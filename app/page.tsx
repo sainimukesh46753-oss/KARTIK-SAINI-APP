@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import ConfirmationFlow from "./confirmation-flow";
 
 const services = [
   { n: "01", title: "Web Development", text: "Fast, polished digital experiences built for real use." },

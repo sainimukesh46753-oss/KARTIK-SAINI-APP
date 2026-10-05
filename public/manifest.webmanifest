@@ -1,7 +1,7 @@
 {
-  "name":"KS Nexus",
-  "short_name":"KS Nexus",
-  "description":"KS Nexus — Development × Design",
+  "name":"KS Forge",
+  "short_name":"KS Forge",
+  "description":"KS Forge — Development × Design",
   "start_url":"/",
   "display":"standalone",
   "background_color":"#08090d",

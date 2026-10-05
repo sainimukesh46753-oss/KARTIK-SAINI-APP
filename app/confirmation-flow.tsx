@@ -66,8 +66,8 @@ export default function ConfirmationFlow({ onComplete }: { onComplete: () => voi
 
   const normalizePhone = (value: string) => {
     const trimmed = value.trim();
-    if (trimmed.startsWith("+")) return trimmed.replace(/[^+\\d]/g, "");
-    const digits = trimmed.replace(/\\D/g, "");
+    if (trimmed.startsWith("+")) return trimmed.replace(/[^+\d]/g, "");
+    const digits = trimmed.replace(/\D/g, "");
     if (country === "India" && digits.length === 10) return `+91${digits}`;
     return `+${digits}`;
   };

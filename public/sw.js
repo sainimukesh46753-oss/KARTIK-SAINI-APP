@@ -1,4 +1,4 @@
-const CACHE_NAME = "ks-nexus-v1";
+const CACHE_NAME = "ks-forge-v2";
 const APP_SHELL = ["/", "/manifest.webmanifest", "/ks-nexus-icon.svg"];
 
 self.addEventListener("install", (event) => {

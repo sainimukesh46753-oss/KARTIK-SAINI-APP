@@ -19,6 +19,7 @@ const work = [
 export default function Home() {
   const [tab, setTab] = useState("Home");
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
   const [step, setStep] = useState(1);
   const [country, setCountry] = useState("");
   const [language, setLanguage] = useState("");

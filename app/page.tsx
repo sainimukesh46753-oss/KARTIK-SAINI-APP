@@ -3,81 +3,21 @@
 import { useEffect, useState } from "react";
 import ConfirmationFlow from "./confirmation-flow";
 
-const stats = [
-  ["01", "Projects", "12"],
-  ["02", "Services", "08"],
-  ["03", "Messages", "03"],
-];
+const nav = ["Dashboard", "Projects", "Services", "Messages", "Profile"];
 
-const quick = [
-  ["Start a project", "Tell us what you want to build.", "↗"],
-  ["Explore services", "Development, design & branding.", "→"],
-  ["View portfolio", "See selected work and case studies.", "→"],
-];
+function Content({ tab, setTab }: { tab: string; setTab: (v: string) => void }) {
+  if (tab === "Projects") return <section className="dashboard"><p className="eyebrow">KS DIGITAL / PROJECTS</p><h1>Your <span>projects.</span></h1><p className="dash-sub">A clean space for everything you are building.</p><div className="project-grid"><article className="project-card"><div className="project-art art-purple"><span>01 / PRODUCT</span><strong>FindF</strong><em>Discovery platform</em></div><div className="project-meta"><b>FindF</b><span>Product Design + Development</span></div></article><article className="project-card"><div className="project-art art-dark"><span>02 / E-COMMERCE</span><strong>KASA</strong><em>Commerce experience</em></div><div className="project-meta"><b>KASA</b><span>UI / UX + Full-Stack</span></div></article><button className="quick-card" onClick={() => setTab("New Project")}><span>+</span><div><h3>Start a new project</h3><p>Turn your next idea into something real.</p></div><b>↗</b></button></div></section>;
+  if (tab === "Services") return <section className="dashboard"><p className="eyebrow">KS DIGITAL / SERVICES</p><h1>What we <span>do.</span></h1><p className="dash-sub">Development, design and branding for digital products.</p><div className="quick-grid">{["Web Development","UI / UX Design","Graphic Design","Brand Identity","E-commerce","Product Strategy"].map((x,i)=><button className="quick-card" key={x} onClick={()=>setTab("New Project")}><span>0{i+1}</span><div><h3>{x}</h3><p>View service details and start a project.</p></div><b>↗</b></button>)}</div></section>;
+  if (tab === "Messages") return <section className="dashboard"><p className="eyebrow">KS DIGITAL / MESSAGES</p><h1>Your <span>conversations.</span></h1><p className="dash-sub">Messages and project communication will appear here.</p><div className="workspace-banner"><div><h2>No messages yet.</h2><p>Start a project and your conversations will stay in one place.</p></div><button className="primary" onClick={()=>setTab("New Project")}>Start a project ↗</button></div></section>;
+  if (tab === "Profile") return <section className="dashboard"><p className="eyebrow">KS DIGITAL / PROFILE</p><h1>Your <span>profile.</span></h1><p className="dash-sub">Manage your account details and workspace identity.</p><div className="workspace-banner"><div><h2>KS Digital Member</h2><p>Your profile details will be connected to your account once authentication is enabled.</p></div><button className="ghost" onClick={()=>setTab("Settings")}>Settings</button></div></section>;
+  if (tab === "Settings") return <section className="dashboard"><p className="eyebrow">KS DIGITAL / SYSTEM</p><h1>App <span>settings.</span></h1><p className="dash-sub">Control your workspace preferences.</p><div className="quick-grid"><button className="quick-card"><span>01</span><div><h3>Account</h3><p>Profile and account preferences.</p></div></button><button className="quick-card"><span>02</span><div><h3>Notifications</h3><p>Choose what you want to receive.</p></div></button><button className="quick-card"><span>03</span><div><h3>Privacy</h3><p>Manage privacy and security.</p></div></button></div></section>;
+  if (tab === "New Project" || tab === "Start a project") return <section className="dashboard"><p className="eyebrow">KS DIGITAL / NEW PROJECT</p><h1>Let's build <span>it.</span></h1><p className="dash-sub">Tell us about your idea and we'll take it from there.</p><div className="workspace-banner"><div><h2>Project intake is next.</h2><p>We'll add the full project form, file uploads and project tracking here.</p></div><button className="ghost" onClick={()=>setTab("Dashboard")}>Back to dashboard</button></div></section>;
+  return <section className="dashboard"><div className="dash-top"><div><p className="eyebrow">KS DIGITAL / DASHBOARD</p><h1>Build something <span>great.</span></h1><p className="dash-sub">Your workspace for digital products, design and creative projects.</p></div><button className="primary" onClick={()=>setTab("New Project")}>New project ↗</button></div><div className="stats">{[["01","Projects","02"],["02","Services","06"],["03","Messages","00"]].map(([n,l,v])=><div className="stat" key={l}><span>{n}</span><div><strong>{v}</strong><small>{l}</small></div></div>)}</div><div className="section-title"><div><p className="eyebrow">START HERE</p><h2>What do you want to do?</h2></div></div><div className="quick-grid">{[["Start a project","Tell us what you want to build."],["Explore services","Development, design & branding."],["View projects","See selected work and case studies."]].map(([t,d])=><button className="quick-card" key={t} onClick={()=>setTab(t==="Start a project"?"New Project":t==="Explore services"?"Services":"Projects")}><span>↗</span><div><h3>{t}</h3><p>{d}</p></div><b>↗</b></button>)}</div><div className="section-title recent-title"><div><p className="eyebrow">WORK</p><h2>Selected projects.</h2></div><button className="text-btn" onClick={()=>setTab("Projects")}>View all →</button></div><div className="project-grid"><article className="project-card"><div className="project-art art-purple"><span>01 / PRODUCT</span><strong>FindF</strong><em>Discovery platform</em></div><div className="project-meta"><b>FindF</b><span>Product Design + Development</span></div></article><article className="project-card"><div className="project-art art-dark"><span>02 / E-COMMERCE</span><strong>KASA</strong><em>Commerce experience</em></div><div className="project-meta"><b>KASA</b><span>UI / UX + Full-Stack</span></div></article></div></section>;
+}
 
 export default function Home() {
   const [confirmed, setConfirmed] = useState(false);
   const [tab, setTab] = useState("Dashboard");
-
-  useEffect(() => {
-    setConfirmed(window.localStorage.getItem("ks-digital-onboarding-complete") === "true");
-  }, []);
-
-  const go = (label: string) => {
-    setTab(label);
-    const id = label.toLowerCase().replace(" ", "-");
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  return (
-    <main className="app">
-      <header className="app-header">
-        <div className="brand"><img className="brand-logo" src="/ks-digital-logo.svg" alt="KS Digital" /></div>
-        <div className="header-right"><span className="live"><i /> Online</span><button className="profile-btn" onClick={() => setTab("Profile")}>KS</button></div>
-      </header>
-
-      <div className="dashboard-shell">
-        <aside className="sidebar">
-          <p className="side-label">WORKSPACE</p>
-          {["Dashboard", "Projects", "Services", "Messages", "Profile"].map((item) => (
-            <button key={item} className={tab === item ? "side-link active" : "side-link"} onClick={() => setTab(item)}>
-              <span>{item === "Dashboard" ? "⌂" : item === "Projects" ? "▣" : item === "Services" ? "✦" : item === "Messages" ? "◌" : "○"}</span>{item}
-            </button>
-          ))}
-          <div className="sidebar-bottom"><p className="side-label">SYSTEM</p><button className="side-link" onClick={() => setTab("Settings")}><span>⚙</span>Settings</button></div>
-        </aside>
-
-        <section className="dashboard" id="dashboard">
-          <div className="dash-top">
-            <div><p className="eyebrow">KS DIGITAL / DASHBOARD</p><h1>Build something <span>great.</span></h1><p className="dash-sub">Your workspace for digital products, design and creative projects.</p></div>
-            <button className="primary" onClick={() => setTab("New Project")}>New project <b>↗</b></button>
-          </div>
-
-          <div className="stats">
-            {stats.map(([n, label, value]) => <div className="stat" key={label}><span>{n}</span><div><strong>{value}</strong><small>{label}</small></div></div>)}
-          </div>
-
-          <div className="section-title"><div><p className="eyebrow">QUICK ACTIONS</p><h2>What do you want to do?</h2></div></div>
-          <div className="quick-grid">
-            {quick.map(([title, text, icon]) => <button className="quick-card" key={title} onClick={() => setTab(title)}><span>{icon}</span><div><h3>{title}</h3><p>{text}</p></div><b>↗</b></button>)}
-          </div>
-
-          <div className="section-title recent-title"><div><p className="eyebrow">RECENT WORK</p><h2>Projects in focus.</h2></div><button className="text-btn" onClick={() => setTab("Projects")}>View all →</button></div>
-          <div className="project-grid">
-            <article className="project-card"><div className="project-art art-purple"><span>01 / PRODUCT</span><strong>FindF</strong><em>Discovery platform</em></div><div className="project-meta"><b>FindF</b><span>Product Design + Development</span></div></article>
-            <article className="project-card"><div className="project-art art-dark"><span>02 / E-COMMERCE</span><strong>KASA</strong><em>Commerce experience</em></div><div className="project-meta"><b>KASA</b><span>UI / UX + Full-Stack</span></div></article>
-            <article className="project-card"><div className="project-art art-blue"><span>03 / BRANDING</span><strong>KS</strong><em>Identity system</em></div><div className="project-meta"><b>Brand Systems</b><span>Strategy + Visual Identity</span></div></article>
-          </div>
-
-          <section className="workspace-banner" id="projects">
-            <div><p className="eyebrow">YOUR WORKSPACE</p><h2>One place for every <span>digital idea.</span></h2><p>Projects, files, conversations and services will live here as we build the next version of KS Digital.</p></div>
-            <button className="ghost" onClick={() => setTab("Projects")}>Open projects</button>
-          </section>
-        </section>
-      </div>
-
-      <nav className="mobile-nav">{["Dashboard","Projects","Services","Messages","Profile"].map(x => <button className={tab===x?"active":""} key={x} onClick={() => setTab(x)}>{x}</button>)}</nav>
-      {!confirmed && <ConfirmationFlow onComplete={() => setConfirmed(true)} />}
-    </main>
-  );
+  useEffect(() => setConfirmed(window.localStorage.getItem("ks-digital-onboarding-complete") === "true"), []);
+  return <main className="app"><header className="app-header"><div className="brand"><img className="brand-logo" src="/ks-digital-logo.svg" alt="KS Digital" /></div><div className="header-right"><span className="live"><i /> Online</span><button className="profile-btn" onClick={()=>setTab("Profile")}>KS</button></div></header><div className="dashboard-shell"><aside className="sidebar"><p className="side-label">WORKSPACE</p>{nav.map(item=><button key={item} className={tab===item?"side-link active":"side-link"} onClick={()=>setTab(item)}><span>{item==="Dashboard"?"⌂":item==="Projects"?"▣":item==="Services"?"✦":item==="Messages"?"◌":"○"}</span>{item}</button>)}<div className="sidebar-bottom"><p className="side-label">SYSTEM</p><button className={tab==="Settings"?"side-link active":"side-link"} onClick={()=>setTab("Settings")}><span>⚙</span>Settings</button></div></aside><Content tab={tab} setTab={setTab}/></div><nav className="mobile-nav">{nav.map(x=><button className={tab===x?"active":""} key={x} onClick={()=>setTab(x)}>{x}</button>)}</nav>{!confirmed&&<ConfirmationFlow onComplete={()=>setConfirmed(true)}/>}</main>;
 }

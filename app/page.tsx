@@ -17,6 +17,32 @@ const work = [
 
 export default function Home() {
   const [tab, setTab] = useState("Home");
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [step, setStep] = useState(1);
+  const [country, setCountry] = useState("");
+  const [language, setLanguage] = useState("");
+  const [mobile, setMobile] = useState("");
+  const [email, setEmail] = useState("");
+  const [otp, setOtp] = useState("");
+  const [demoOtp, setDemoOtp] = useState("");
+  const [confirmed, setConfirmed] = useState(false);
+
+  const openConfirmation = () => {
+    setConfirmOpen(true);
+    setStep(1);
+    setConfirmed(false);
+  };
+
+  const nextStep = () => {
+    if (step === 1 && (!country || !language)) return;
+    if (step === 2 && (!mobile || !email || !email.includes("@"))) return;
+    if (step === 3) {
+      const code = String(Math.floor(100000 + Math.random() * 900000));
+      setDemoOtp(code);
+    }
+    if (step === 4 && otp !== demoOtp) return;
+    setStep((value) => Math.min(value + 1, 5));
+  };
 
   const scrollTo = (id: string, nextTab: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
@@ -35,7 +61,7 @@ export default function Home() {
         <h1>Ideas into <span>digital products.</span></h1>
         <p className="hero-copy">Development, design and visual identity — forged together into focused digital products.</p>
         <div className="hero-actions">
-          <button className="primary" onClick={() => scrollTo("contact", "Contact")}>Start a project <b>↗</b></button>
+          <button className="primary" onClick={openConfirmation}>Start a project <b>↗</b></button>
           <button className="ghost" onClick={() => scrollTo("work", "Work")}>Explore work</button>
         </div>
       </section>

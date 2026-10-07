@@ -76,7 +76,7 @@ export default function ConfirmationFlow({ onComplete }: { onComplete: () => voi
     setOtpSending(true); setOtpError("");
     try {
       const phone = normalizePhone(mobile);
-      if (!/^\\+[1-9]\\d{7,14}$/.test(phone)) throw new Error("Please enter a valid mobile number with country code.");
+      if (!/^\+[1-9]\d{7,14}$/.test(phone)) throw new Error("Please enter a valid mobile number with country code.");
       const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
       const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
       if (!url || !key) throw new Error("Authentication service is not configured.");

@@ -152,7 +152,7 @@ function Content({tab,setTab}:{tab:string;setTab:(v:string)=>void}) {
   const saveProfile=async()=>{
     setBusy(true);
     try {
-      const body={client_id:clientId(),...profile,updated_at:new Date().toISOString()};
+      const body={...profile,client_id:clientId(),updated_at:new Date().toISOString()};
       await api(`client_profiles?client_id=eq.${encodeURIComponent(clientId())}`,{method:"DELETE"});
       await insertRow("client_profiles",body);
       setMessage("Profile saved permanently.");

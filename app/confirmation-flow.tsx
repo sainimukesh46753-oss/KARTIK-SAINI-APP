@@ -80,9 +80,9 @@ export default function ConfirmationFlow({ onComplete }: { onComplete: () => voi
       const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
       const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
       if (!url || !key) throw new Error("Authentication service is not configured.");
-      const res = await fetch(\`${url}/functions/v1/swift-worker\`, {
+      const res = await fetch(`${url}/functions/v1/swift-worker`, {
         method: "POST",
-        headers: { apikey: key, Authorization: \`Bearer ${key}\`, "Content-Type": "application/json" },
+        headers: { apikey: key, Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
         body: JSON.stringify({ action: "send", phone })
       });
       const data = await res.json().catch(() => null);
@@ -100,9 +100,9 @@ export default function ConfirmationFlow({ onComplete }: { onComplete: () => voi
       const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
       const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
       if (!url || !key) throw new Error("Authentication service is not configured.");
-      const res = await fetch(\`${url}/functions/v1/swift-worker\`, {
+      const res = await fetch(`${url}/functions/v1/swift-worker`, {
         method: "POST",
-        headers: { apikey: key, Authorization: \`Bearer ${key}\`, "Content-Type": "application/json" },
+        headers: { apikey: key, Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
         body: JSON.stringify({ action: "verify", phone, otp })
       });
       const data = await res.json().catch(() => null);

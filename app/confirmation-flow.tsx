@@ -80,15 +80,13 @@ export default function ConfirmationFlow({ onComplete }: { onComplete: () => voi
       const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
       const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
       if (!url || !key) throw new Error("Authentication service is not configured.");
-      const res = await fetch(`${url}/auth/v1/otp`, {
+      const res = await fetch(\`${url}/functions/v1/swift-worker\`, {
         method: "POST",
-        headers: { apikey: key, "Content-Type": "application/json" },
-        body: JSON.stringify({ phone })
+        headers: { apikey: key, Authorization: \`Bearer ${key}\`, "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "send", phone })
       });
-      if (!res.ok) {
-        const data = await res.json().catch(() => null);
-        throw new Error(data?.msg || data?.message || "OTP could not be sent. Please try again.");
-      }
+      const data = await res.json().catch(() => null);
+      if (!res.ok) throw new Error(data?.error || "OTP could not be sent. Please try again.");
       setStep(4);
     } catch (e) {
       setOtpError(e instanceof Error ? e.message : "OTP could not be sent.");
@@ -101,15 +99,14 @@ export default function ConfirmationFlow({ onComplete }: { onComplete: () => voi
       const phone = normalizePhone(mobile);
       const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
       const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
-      const res = await fetch(`${url}/auth/v1/verify`, {
+      if (!url || !key) throw new Error("Authentication service is not configured.");
+      const res = await fetch(\`${url}/functions/v1/swift-worker\`, {
         method: "POST",
-        headers: { apikey: key || "", "Content-Type": "application/json" },
-        body: JSON.stringify({ type: "sms", phone, token: otp })
+        headers: { apikey: key, Authorization: \`Bearer ${key}\`, "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "verify", phone, otp })
       });
       const data = await res.json().catch(() => null);
-      if (!res.ok) throw new Error(data?.msg || data?.message || "Invalid or expired OTP.");
-      if (data?.access_token) localStorage.setItem("ks-digital-auth-access-token", data.access_token);
-      if (data?.refresh_token) localStorage.setItem("ks-digital-auth-refresh-token", data.refresh_token);
+      if (!res.ok) throw new Error(data?.error || "Invalid or expired OTP.");
       setStep(5);
     } catch (e) {
       setOtpError(e instanceof Error ? e.message : "OTP verification failed.");

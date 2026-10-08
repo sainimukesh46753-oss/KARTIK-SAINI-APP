@@ -132,6 +132,11 @@ export default function ConfirmationFlow({ onComplete }: { onComplete: () => voi
     onComplete();
   };
 
+  const startAgain = () => {
+    window.localStorage.removeItem("ks-digital-onboarding-complete");
+    window.location.reload();
+  };
+
   return (
     <div className="confirm-overlay">
       <div className="confirm-card" role="dialog" aria-modal="true" aria-labelledby="welcome-title">
@@ -152,6 +157,7 @@ export default function ConfirmationFlow({ onComplete }: { onComplete: () => voi
         {step === 5 && <div className="confirm-step"><p className="step-kicker">STEP 5 OF 5</p><h3>Final confirmation</h3><p className="confirm-note">Confirm your details to enter KS Digital.</p><div className="confirm-summary"><span>Name</span><b>{name}</b><span>Age</span><b>{age}</b><span>Country</span><b>{country}</b><span>Language</span><b>{language}</b><span>Mobile</span><b>{mobile}</b><span>Email</span><b>{email}</b></div></div>}
 
         <div className="confirm-actions">{step > 1 && <button className="ghost" onClick={()=>setStep(step-1)}>Back</button>}<button className="primary" onClick={step===5?finish:next} disabled={otpSending || otpVerifying}>{step===5?"Confirm & Enter":step===3?(otpSending?"Sending OTP...":"Send real OTP"):step===4?(otpVerifying?"Verifying...":"Verify OTP"):"Continue"} <b>→</b></button></div>
+        <button type="button" className="ghost" onClick={startAgain} disabled={otpSending || otpVerifying}>↻ Start again / Logout</button>
         <p className="confirm-footer">You must be 18+ to use KS Digital.</p>
       </div>
     </div>

@@ -48,6 +48,23 @@ async function updateRow(table:string, query:string, body:unknown) {
   return api(`${table}?${query}`,{method:"PATCH",headers:{Prefer:"return=representation"},body:JSON.stringify(body)});
 }
 
+function ConnectionStatus() {
+  const [weak,setWeak]=useState(false);
+  useEffect(()=>{
+    const check=()=>{
+      const connection=(navigator as Navigator & {connection?:{effectiveType?:string;rtt?:number;downlink?:number}}).connection;
+      setWeak(!navigator.onLine || connection?.effectiveType==="2g" || connection?.effectiveType==="slow-2g" || (connection?.rtt??0)>=700 || (connection?.downlink??10)<0.8);
+    };
+    check(); window.addEventListener("online",check); window.addEventListener("offline",check);
+    const connection=(navigator as Navigator & {connection?:EventTarget}).connection;
+    connection?.addEventListener("change",check);
+    const timer=window.setInterval(check,5000);
+    return()=>{window.removeEventListener("online",check);window.removeEventListener("offline",check);connection?.removeEventListener("change",check);window.clearInterval(timer)};
+  },[]);
+  if(!weak) return null;
+  return <span className="connection-status" title="Internet connection is weak"><span className="connection-bars"><i/><i/><i/></span><span>Slow connection</span></span>;
+}
+
 function Card({children,className=""}:{children:React.ReactNode;className?:string}) {
   return <div className={`quick-card ${className}`}>{children}</div>;
 }
@@ -208,5 +225,5 @@ export default function Home() {
   const [ready,setReady]=useState(false);
   useEffect(()=>{setReady(localStorage.getItem("ks-digital-onboarding-complete")==="true"); if("serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js").catch(()=>{});},[]);
   if(!ready) return <ConfirmationFlow onComplete={()=>setReady(true)}/>;
-  return <main className="app"><header className="app-header"><div className="brand"><div className="brand-mark">KS</div></div><div className="header-right"><span className="live">● Online</span><button className="profile-btn" onClick={()=>setTab("Profile")}>KS</button></div></header><div className="dashboard-shell"><aside className="sidebar"><p className="side-label">WORKSPACE</p>{nav.map((item,i)=><button className={tab===item?"side-link active":"side-link"} key={item} onClick={()=>setTab(item)}><span>{["⌂","▣","✦","✉","□","₹","◷","●","◒","?","◎","⚙"][i]}</span>{item}</button>)}</aside><Content tab={tab} setTab={setTab}/></div><nav className="mobile-nav">{nav.slice(0,5).map((item)=><button className={tab===item?"active":""} key={item} onClick={()=>setTab(item)}>{item}</button>)}</nav></main>;
+  return <main className="app"><header className="app-header"><div className="brand"><div className="brand-mark">KS</div></div><div className="header-right"><ConnectionStatus/><span className="live">● Online</span><button className="profile-btn" onClick={()=>setTab("Profile")}>KS</button></div></header><div className="dashboard-shell"><aside className="sidebar"><p className="side-label">WORKSPACE</p>{nav.map((item,i)=><button className={tab===item?"side-link active":"side-link"} key={item} onClick={()=>setTab(item)}><span>{["⌂","▣","✦","✉","□","₹","◷","●","◒","?","◎","⚙"][i]}</span>{item}</button>)}</aside><Content tab={tab} setTab={setTab}/></div><nav className="mobile-nav">{nav.slice(0,5).map((item)=><button className={tab===item?"active":""} key={item} onClick={()=>setTab(item)}>{item}</button>)}</nav></main>;
 }

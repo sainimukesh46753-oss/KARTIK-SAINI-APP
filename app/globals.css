@@ -82,3 +82,12 @@
  .help-strip{padding:16px}
  .mobile-nav button{font-size:9px;padding:8px 2px}
 }
+
+.mobile-more-panel{display:none}
+@media(max-width:850px){
+ .mobile-more-panel{position:fixed;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;z-index:39;left:12px;right:12px;bottom:82px;max-height:min(55vh,420px);overflow:auto;padding:14px;background:rgba(16,18,26,.98);border:1px solid #292c38;border-radius:18px;box-shadow:0 18px 60px #0009;backdrop-filter:blur(18px)}
+ .mobile-more-panel p{grid-column:1/-1;font-size:9px;letter-spacing:.15em;color:var(--muted);margin:2px 4px 6px}
+ .mobile-more-panel button{display:flex;align-items:center;gap:9px;min-width:0;border:1px solid var(--line);border-radius:10px;padding:11px 9px;background:rgba(255,255,255,.025);color:inherit;text-align:left;font-size:11px;cursor:pointer}
+ .mobile-more-panel button span{color:var(--purple2);font-size:14px}
+ .mobile-more-panel button.active{background:rgba(155,131,255,.14);border-color:var(--purple)}
+}

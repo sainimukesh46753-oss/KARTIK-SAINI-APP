@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import ConfirmationFlow from "./confirmation-flow";
 
-const nav = ["Dashboard","Projects","Products","Services","Messages","Files","Payments","Timeline","Notifications","Analytics","Support","Admin Panel","Profile","Settings"];
+const nav = ["Dashboard","Projects","Services","Messages","Files","Payments","Timeline","Notifications","Analytics","Support","Admin Panel","Profile","Settings"];
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
 const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || "";
 
@@ -19,7 +19,6 @@ type Invoice = {id:string; project_id:string|null; amount:number; status:string;
 type Notice = {id:string; title:string; body:string; read:boolean; created_at:string};
 type Profile = {client_id:string; full_name:string; email:string|null; mobile:string|null; company:string|null; country:string|null; role:string|null; about:string|null};
 type Ticket = {id:string; project_id:string|null; subject:string; message:string; status:string; created_at:string};
-type StoreProduct = {id:number; title:string; description:string; category:string; price:number; rating:number; thumbnail:string; images:string[]; brand?:string};
 
 function clientId() {
   const key = "ks-digital-client-id";
@@ -72,11 +71,6 @@ function Card({children,className=""}:{children:React.ReactNode;className?:strin
 
 function Content({tab,setTab}:{tab:string;setTab:(v:string)=>void}) {
   const [projects,setProjects]=useState<Project[]>([]);
-  const [storeProducts,setStoreProducts]=useState<StoreProduct[]>([]);
-  const [productsLoading,setProductsLoading]=useState(false);
-  const [productsError,setProductsError]=useState("");
-  const [productSearch,setProductSearch]=useState("");
-  const [productCategory,setProductCategory]=useState("all");
   const [messages,setMessages]=useState<Message[]>([]);
   const [tasks,setTasks]=useState<Task[]>([]);
   const [files,setFiles]=useState<FileRow[]>([]);
@@ -118,17 +112,6 @@ function Content({tab,setTab}:{tab:string;setTab:(v:string)=>void}) {
   };
   useEffect(()=>{ reload(); },[tab,submitted]);
 
-  useEffect(()=>{
-    if(tab!=="Products" || storeProducts.length) return;
-    let cancelled=false;
-    setProductsLoading(true);setProductsError("");
-    fetch("https://dummyjson.com/products?limit=0")
-      .then(r=>{if(!r.ok) throw new Error("Product catalog could not be loaded.");return r.json();})
-      .then(data=>{if(!cancelled)setStoreProducts(Array.isArray(data.products)?data.products:[]);})
-      .catch(()=>{if(!cancelled)setProductsError("Product photos could not load. Please check your internet connection and try again.");})
-      .finally(()=>{if(!cancelled)setProductsLoading(false);});
-    return()=>{cancelled=true;};
-  },[tab,storeProducts.length]);
 
   useEffect(()=>{
     const raw=localStorage.getItem("ks-digital-settings");
@@ -201,10 +184,10 @@ function Content({tab,setTab}:{tab:string;setTab:(v:string)=>void}) {
   const markRead=async(n:Notice)=>{await updateRow("project_notifications",`id=eq.${n.id}&browser_token=eq.${encodeURIComponent(clientId())}`,{read:true});await reload();};
 
   if(tab==="Dashboard") return <section className="dashboard">
-    <div className="welcome-panel"><div><p className="eyebrow">YOUR KS DIGITAL WORKSPACE</p><h1>Welcome back.</h1><p className="dash-sub">Everything in one place. Start with a project, browse products, or ask us for help.</p></div><button className="primary" onClick={()=>setTab("New Project")}>＋ Start a project</button></div>
+    <div className="welcome-panel"><div><p className="eyebrow">YOUR KS DIGITAL WORKSPACE</p><h1>Welcome back.</h1><p className="dash-sub">Everything in one place. Start a project, manage your work, or ask us for help.</p></div><button className="primary" onClick={()=>setTab("New Project")}>＋ Start a project</button></div>
     <div className="stats">{[[String(projects.length),"My projects","Projects"],[String(messages.length),"Messages","Messages"],[String(notices.filter(n=>!n.read).length),"Unread updates","Notifications"]].map(([v,l,t])=><button className="stat" key={l} onClick={()=>setTab(t)}><div><strong>{v}</strong><small>{l}</small></div><span className="stat-arrow">→</span></button>)}</div>
     <div className="section-title"><div><h2>What would you like to do?</h2><p className="section-hint">Choose one option. You can find everything else under “More options”.</p></div></div>
-    <div className="quick-grid home-tools">{[["Products","Browse products and photos.","▦"],["Projects","View your work and progress.","▣"],["Services","See what we can help you with.","✦"],["Messages","Talk to the KS Digital team.","✉"],["Files","Open shared files and links.","□"],["Payments","View invoices and payment status.","₹"]].map(([t,d,icon])=><button className="quick-card home-card" key={t} onClick={()=>setTab(t)}><span>{icon}</span><h3>{t}</h3><p>{d}</p><b>Open →</b></button>)}</div>
+    <div className="quick-grid home-tools">{[["Projects","View your work and progress.","▣"],["Services","See what we can help you with.","✦"],["Messages","Talk to the KS Digital team.","✉"],["Files","Open shared files and links.","□"],["Payments","View invoices and payment status.","₹"],["Support","Get help with your workspace.","?"]].map(([t,d,icon])=><button className="quick-card home-card" key={t} onClick={()=>setTab(t)}><span>{icon}</span><h3>{t}</h3><p>{d}</p><b>Open →</b></button>)}</div>
     <div className="help-strip"><div><strong>Need a hand?</strong><p>Not sure where to go? Send us a message or open Support.</p></div><button className="ghost" onClick={()=>setTab("Support")}>Get help</button><button className="ghost" onClick={()=>setTab("Messages")}>Message us</button></div>
   </section>;
 
@@ -235,12 +218,6 @@ function Content({tab,setTab}:{tab:string;setTab:(v:string)=>void}) {
   if(tab==="Profile") return <section className="dashboard"><div className="dash-top"><div><p className="eyebrow">KS DIGITAL / ACCOUNT</p><h1>Your <span>profile.</span></h1><p className="dash-sub">Your saved workspace identity and contact details.</p></div></div><div className="profile-hero"><div className="avatar-xl">KS</div><div><p className="eyebrow">CLIENT PROFILE</p><h2>{profile.full_name}</h2><p>{profile.company||"Your project account"}</p></div><span className="profile-status">● Active</span></div><div className="profile-form"><label>Full name<input value={profile.full_name} onChange={e=>setProfile({...profile,full_name:e.target.value})}/></label><label>Email<input value={profile.email||""} onChange={e=>setProfile({...profile,email:e.target.value})}/></label><label>Mobile number<input value={profile.mobile||""} onChange={e=>setProfile({...profile,mobile:e.target.value})}/></label><label>Company / Brand<input value={profile.company||""} onChange={e=>setProfile({...profile,company:e.target.value})}/></label><label>Country<input value={profile.country||""} onChange={e=>setProfile({...profile,country:e.target.value})}/></label><label>Role<input value={profile.role||""} onChange={e=>setProfile({...profile,role:e.target.value})}/></label><label className="profile-full">About you<textarea rows={5} value={profile.about||""} onChange={e=>setProfile({...profile,about:e.target.value})}/></label><div className="form-actions"><button className="primary" onClick={saveProfile} disabled={busy}>{busy?"Saving...":"Save profile ✓"}</button></div></div></section>;
 
   if(tab==="Settings") return <section className="dashboard"><p className="eyebrow">KS DIGITAL / SYSTEM</p><h1>Workspace <span>settings.</span></h1><p className="dash-sub">These preferences now persist on this device.</p><div className="settings-layout"><aside className="settings-nav">{["General","Notifications","Appearance","Privacy & Security","Desktop App","Language & Region","Workspace","Help & Support"].map((x,i)=><button className={i===0?"setting-nav-active":""} key={x}>{["⚙","🔔","🎨","🔐","💻","🌐","📊","❓"][i]} {x}</button>)}</aside><div className="settings-content"><div className="settings-section"><p className="eyebrow">GENERAL</p><h2>Workspace preferences</h2>{[["autoSave","Auto-save project activity","Keep project updates saved automatically."],["progress","Show project progress","Display milestones and progress."],["compact","Compact workspace","Use a tighter layout."]].map(([k,t,d])=><div className="setting-row" key={k}><div><b>{t}</b><small>{d}</small></div><label className="toggle"><input type="checkbox" checked={settings[k]??false} onChange={e=>setSetting(k,e.target.checked)}/><i/></label></div>)}</div><div className="settings-section"><p className="eyebrow">NOTIFICATIONS</p><h2>Stay updated</h2>{[["projectUpdates","Project updates"],["newMessages","New messages"],["paymentReminders","Payment reminders"]].map(([k,t])=><div className="setting-row" key={k}><div><b>{t}</b><small>Workspace alerts and activity notifications.</small></div><label className="toggle"><input type="checkbox" checked={settings[k]??false} onChange={e=>setSetting(k,e.target.checked)}/><i/></label></div>)}</div><div className="settings-section"><p className="eyebrow">APPEARANCE</p><h2>Make it yours</h2><div className="appearance-grid">{["dark","light","system"].map(x=><button key={x} onClick={()=>changeTheme(x)}><strong>{x==="dark"?"◐":x==="light"?"○":"↔"}</strong><b>{x[0].toUpperCase()+x.slice(1)}</b><small>{theme===x?"Currently selected":"Choose this theme"}</small></button>)}</div></div><div className="settings-section"><p className="eyebrow">PRIVACY & SECURITY</p><h2>Workspace protection</h2><div className="security-card"><span>✓</span><div><b>Protected</b><small>Your client workspace uses a private browser token for row-level access.</small></div><em>Active</em></div><div className="setting-row"><div><b>Session protection</b><small>Protect this workspace session on this device.</small></div><label className="toggle"><input type="checkbox" checked={settings.sessionProtection} onChange={e=>setSetting("sessionProtection",e.target.checked)}/><i/></label></div></div><div className="settings-section"><p className="eyebrow">LANGUAGE & REGION</p><h2>Regional preferences</h2><div className="settings-fields"><label>Language<select><option>English</option><option>Hindi</option></select></label><label>Currency<select><option>INR — ₹</option><option>USD — $</option><option>GBP — £</option><option>AED — د.إ</option></select></label><label>Time zone<select><option>India Standard Time</option><option>UTC</option><option>Gulf Standard Time</option></select></label></div></div><div className="settings-section"><p className="eyebrow">WORKSPACE TOOLS</p><div className="settings-tools"><button onClick={()=>setTab("Profile")}>Profile →</button><button onClick={()=>setTab("Notifications")}>Notifications →</button><button onClick={()=>setTab("Analytics")}>Analytics →</button><button onClick={()=>setTab("Support")}>Support center →</button></div></div><div className="settings-section"><p className="eyebrow">DESKTOP APP</p><h2>Install KS Digital</h2><p>Use your browser menu and choose Install app when this site is available as a PWA.</p></div></div></div></section>;
-
-  if(tab==="Products") {
-    const categories=Array.from(new Set(storeProducts.map(p=>p.category))).sort();
-    const visibleProducts=storeProducts.filter(p=>(productCategory==="all"||p.category===productCategory)&&`${p.title} ${p.brand||""} ${p.category}`.toLowerCase().includes(productSearch.toLowerCase()));
-    return <section className="dashboard"><div className="dash-top"><div><p className="eyebrow">KS DIGITAL / STORE</p><h1>Product <span>catalog.</span></h1><p className="dash-sub">Browse product listings with real product photos. This is the starter catalog; reaching 10,000+ items will require connecting a larger supplier feed or importing a product file.</p></div><span className="count">{storeProducts.length.toLocaleString("en-IN")} PRODUCTS</span></div><div className="product-controls"><input aria-label="Search products" value={productSearch} onChange={e=>setProductSearch(e.target.value)} placeholder="Search products..." /><select aria-label="Filter by category" value={productCategory} onChange={e=>setProductCategory(e.target.value)}><option value="all">All categories</option>{categories.map(c=><option key={c} value={c}>{c.replace(/-/g," ")}</option>)}</select></div>{productsLoading&&<div className="workspace-banner"><p>Loading product catalog and photos…</p></div>}{productsError&&<div className="workspace-banner"><div><p>{productsError}</p><button className="primary" onClick={()=>{setStoreProducts([]);setProductsError("");setTab("Dashboard");setTimeout(()=>setTab("Products"),0);}}>Try again</button></div></div>}{!productsLoading&&!productsError&&<><p className="product-result-count">Showing {visibleProducts.length.toLocaleString("en-IN")} of {storeProducts.length.toLocaleString("en-IN")} starter products</p><div className="catalog-grid">{visibleProducts.map(p=><article className="catalog-card" key={p.id}><div className="catalog-photo"><img src={p.thumbnail||p.images?.[0]} alt={p.title} loading="lazy" /></div><div className="catalog-info"><span className="catalog-category">{p.category.replace(/-/g," ")}</span><h3>{p.title}</h3><p>{p.brand||p.description}</p><div className="catalog-price"><strong>₹{Math.round(p.price*83).toLocaleString("en-IN")}</strong><span>★ {p.rating.toFixed(1)}</span></div></div></article>)}</div>{visibleProducts.length===0&&<div className="workspace-banner"><p>No products match that search.</p></div>}</>}</section>;
-  }
 
   if(tab==="Services") return <section className="dashboard"><p className="eyebrow">KS DIGITAL / SERVICES</p><h1>What we <span>do.</span></h1><p className="dash-sub">Development, design, branding and growth services.</p><div className="quick-grid">{["Web Development","UI / UX Design","Graphic Design","Brand Identity","E-commerce","Mobile App Development","Custom Web App","SEO & Performance","Maintenance & Support"].map((x,i)=><button className="quick-card" key={x} onClick={()=>setTab("New Project")}><span>{String(i+1).padStart(2,"0")}</span><h3>{x}</h3><p>Open a new project request for this service.</p><b>↗</b></button>)}</div></section>;
 
